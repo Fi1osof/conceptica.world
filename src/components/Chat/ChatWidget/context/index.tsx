@@ -11,6 +11,105 @@ import { ChatMessage, CHAT_SESSION_STORAGE_KEY } from '../interfaces'
 import { useSnackbar } from 'src/ui-kit/Snackbar/context'
 import { sendMessageStream } from '../../lib/streamClient'
 import { useRouter } from 'next/router'
+import { useLexicon, LexiconDict } from 'src/Custom/Lexicon'
+
+const chatLexicon: LexiconDict = {
+  en: {
+    'chat.welcomeTitle': 'Hello! How can I help?',
+    'chat.welcomeText': 'Ask anything',
+    'chat.placeholder': 'Type your message...',
+  },
+  ru: {
+    'chat.welcomeTitle': 'Привет! Чем могу помочь?',
+    'chat.welcomeText': 'Спросите что угодно',
+    'chat.placeholder': 'Введите ваше сообщение...',
+  },
+  vi: {
+    'chat.welcomeTitle': 'Xin chào! Tôi có thể giúp gì?',
+    'chat.welcomeText': 'Hỏi bất cứ điều gì',
+    'chat.placeholder': 'Nhập tin nhắn của bạn...',
+  },
+  fr: {
+    'chat.welcomeTitle': 'Bonjour! Comment puis-je aider?',
+    'chat.welcomeText': "Posez n'importe quelle question",
+    'chat.placeholder': 'Tapez votre message...',
+  },
+  de: {
+    'chat.welcomeTitle': 'Hallo! Wie kann ich helfen?',
+    'chat.welcomeText': 'Fragen Sie alles',
+    'chat.placeholder': 'Geben Sie Ihre Nachricht ein...',
+  },
+  it: {
+    'chat.welcomeTitle': 'Ciao! Come posso aiutare?',
+    'chat.welcomeText': 'Chiedi qualsiasi cosa',
+    'chat.placeholder': 'Digita il tuo messaggio...',
+  },
+  pl: {
+    'chat.welcomeTitle': 'Cześć! Jak mogę pomóc?',
+    'chat.welcomeText': 'Zadaj dowolne pytanie',
+    'chat.placeholder': 'Wpisz swoją wiadomość...',
+  },
+  es: {
+    'chat.welcomeTitle': '¡Hola! ¿Cómo puedo ayudar?',
+    'chat.welcomeText': 'Pregunta cualquier cosa',
+    'chat.placeholder': 'Escribe tu mensaje...',
+  },
+  pt: {
+    'chat.welcomeTitle': 'Olá! Como posso ajudar?',
+    'chat.welcomeText': 'Pergunte qualquer coisa',
+    'chat.placeholder': 'Digite sua mensagem...',
+  },
+  zh: {
+    'chat.welcomeTitle': '你好！有什么可以帮助？',
+    'chat.welcomeText': '问任何问题',
+    'chat.placeholder': '输入您的消息...',
+  },
+  hi: {
+    'chat.welcomeTitle': 'नमस्ते! मैं कैसे मदद कर सकता हूं?',
+    'chat.welcomeText': 'कुछ भी पूछें',
+    'chat.placeholder': 'अपना संदेश दर्ज करें...',
+  },
+  bn: {
+    'chat.welcomeTitle': 'হ্যালো! আমি কীভাবে সাহায্য করতে পারি?',
+    'chat.welcomeText': 'যেকোনো প্রশ্ন জিজ্ঞাসা করুন',
+    'chat.placeholder': 'আপনার বার্তা লিখুন...',
+  },
+  ja: {
+    'chat.welcomeTitle': 'こんにちは！何かお手伝いできることはありますか？',
+    'chat.welcomeText': '何でも聞いてください',
+    'chat.placeholder': 'メッセージを入力...',
+  },
+  tr: {
+    'chat.welcomeTitle': 'Merhaba! Nasıl yardımcı olabilirim?',
+    'chat.welcomeText': 'Her şeyi sorabilirsiniz',
+    'chat.placeholder': 'Mesajınızı girin...',
+  },
+  ko: {
+    'chat.welcomeTitle': '안녕하세요! 어떻게 도와드릴까요?',
+    'chat.welcomeText': '무엇이든 물어보세요',
+    'chat.placeholder': '메시지를 입력하세요...',
+  },
+  th: {
+    'chat.welcomeTitle': 'สวัสดี! ฉันจะช่วยคุณได้อย่างไร?',
+    'chat.welcomeText': 'ถามอะไรก็ได้',
+    'chat.placeholder': 'พิมพ์ข้อความของคุณ...',
+  },
+  sw: {
+    'chat.welcomeTitle': 'Habari! Ninaweza kusaidia vipi?',
+    'chat.welcomeText': 'Uliza chochote',
+    'chat.placeholder': 'Andika ujumbe wako...',
+  },
+  fil: {
+    'chat.welcomeTitle': 'Kamusta! Paano ako makakatulong?',
+    'chat.welcomeText': 'Magtanong ng kahit anuman',
+    'chat.placeholder': 'I-type ang iyong mensahe...',
+  },
+  ms: {
+    'chat.welcomeTitle': 'Hai! Bagaimana saya boleh membantu?',
+    'chat.welcomeText': 'Tanya apa-apa sahaja',
+    'chat.placeholder': 'Taip mesej anda...',
+  },
+}
 
 type ChatContextValue = {
   messages: ChatMessage[]
@@ -51,10 +150,11 @@ type ChatProviderProps = {
 
 export const ChatProvider: React.FC<ChatProviderProps> = ({
   children,
-  welcomeTitle = 'Hi! How can I help?',
-  welcomeText = 'Ask me anything',
-  placeholder = 'Type your message...',
+  welcomeTitle,
+  welcomeText,
+  placeholder,
 }) => {
+  const t = useLexicon(chatLexicon)
   const snackbar = useSnackbar()
   const [isOpen, setIsOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -201,7 +301,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({
                       msg.id === streamingMessageIdRef.current
                         ? {
                             ...msg,
-                            text: 'Sorry, something went wrong. Please try again.',
+                            text: 'Извините, что-то пошло не так. Попробуйте снова.',
                           }
                         : msg,
                     ),
@@ -211,7 +311,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({
                     ...prev,
                     {
                       id: Date.now().toString(),
-                      text: 'Sorry, something went wrong. Please try again.',
+                      text: 'Извините, что-то пошло не так. Попробуйте снова.',
                       isUser: false,
                     },
                   ])
@@ -265,9 +365,9 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({
       handleClose,
       handleExpand,
       handleToggle,
-      welcomeTitle,
-      welcomeText,
-      placeholder,
+      welcomeTitle: welcomeTitle || t('chat.welcomeTitle'),
+      welcomeText: welcomeText || t('chat.welcomeText'),
+      placeholder: placeholder || t('chat.placeholder'),
       initialMessage,
       initialMessageSetter,
     }),
@@ -287,6 +387,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({
       placeholder,
       initialMessage,
       initialMessageSetter,
+      t,
     ],
   )
 

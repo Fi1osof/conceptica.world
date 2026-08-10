@@ -16,6 +16,14 @@ export const LayoutStyled = styled.div`
   overflow: hidden;
 `
 
+export const LayoutMainHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 10px;
+  gap: 10px;
+`
+
 type LayoutMainProps = {
   $sidebarOpen?: boolean
 }

@@ -17,10 +17,10 @@ export const ConceptItemMetaStyled = styled.div`
 `
 
 export const ConceptItemTitleStyled = styled.h1`
-  text-overflow: ellipsis;
+  /* text-overflow: ellipsis;
   max-width: 100%;
   overflow: hidden;
-  white-space: nowrap;
+  white-space: nowrap; */
 `
 
 export const ConceptItemDescriptionStyled = styled.div`

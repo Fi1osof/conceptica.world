@@ -8,10 +8,12 @@ import {
   MobileMenuButton,
   LayoutInnerContainer,
   LayoutFooter,
+  LayoutMainHeader,
 } from './styles'
 import { SidebarMemo } from './Sidebar'
 import { ChatContent } from 'src/components/Chat/ChatWidget/ChatContent'
 import { ChatWidget } from '../Chat/ChatWidget'
+import { LocaleSwitcher } from 'src/Custom/components/LocaleSwitcher'
 
 type LayoutProps = React.PropsWithChildren
 
@@ -31,6 +33,10 @@ export const Layout: React.FC<LayoutProps> = ({ children, ...other }) => {
       <SidebarMemo isOpen={sidebarOpen} onToggle={toggleSidebar} />
 
       <LayoutMain $sidebarOpen={sidebarOpen}>
+        <LayoutMainHeader>
+          <LocaleSwitcher />
+        </LayoutMainHeader>
+
         <LayoutTopBar>
           <MobileMenuButton onClick={toggleSidebar}>
             <svg

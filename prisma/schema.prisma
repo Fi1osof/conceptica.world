@@ -330,6 +330,26 @@ model KBConcept {
   quality    Float               @default(0.7)
   visibility KBConceptVisibility @default(hidden)
 
+  // Langs
+  en  Json?
+  de  Json?
+  pt  Json?
+  es  Json?
+  fr  Json?
+  it  Json?
+  pl  Json?
+  tr  Json?
+  zh  Json?
+  hi  Json?
+  bn  Json?
+  th  Json?
+  vi  Json?
+  ja  Json?
+  ko  Json?
+  sw  Json?
+  fil Json?
+  ms  Json?
+
   @@unique([rootId, code])
   @@unique([parentId, code])
   @@index([parentId])

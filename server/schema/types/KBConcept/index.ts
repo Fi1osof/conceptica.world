@@ -16,11 +16,31 @@ import './resolvers/upload'
 
 import { KBConceptOrderByInput, KBConceptWhereInput } from './inputs'
 import { conceptsResolver } from './resolvers/concepts'
-import { SiteRoute } from '@prisma/client'
+import { KBConcept, SiteRoute } from '@prisma/client'
 import { KBConceptVisibilityEnum } from './types'
+import { PrismaContext } from 'server/context/interfaces'
+import { LangFields } from '../Custom/admin/resolvers/bulkUpdateLangs/interfaces'
 
 // Export all types
 export * from './inputs'
+
+function getFieldValueByLang(
+  source: KBConcept,
+  field: keyof Pick<KBConcept, 'name' | 'description' | 'intro' | 'content'>,
+  { locale }: PrismaContext,
+) {
+  let value = source[field]
+
+  if (locale && locale !== 'ru') {
+    const translation = source[locale] as LangFields | undefined
+
+    if (translation?.[field]) {
+      value = translation[field]
+    }
+  }
+
+  return value
+}
 
 builder.prismaObject('KBConcept', {
   fields: (t) => ({
@@ -28,10 +48,29 @@ builder.prismaObject('KBConcept', {
     createdAt: t.expose('createdAt', { type: 'DateTime', nullable: false }),
     updatedAt: t.expose('updatedAt', { type: 'DateTime', nullable: false }),
     type: t.exposeString('type', { nullable: true }),
-    name: t.exposeString('name', { nullable: false }),
-    description: t.exposeString('description', { nullable: true }),
-    intro: t.exposeString('intro'),
-    content: t.exposeString('content', { nullable: true }),
+    name: t.string({
+      nullable: false,
+      resolve(source, _, ctx) {
+        return getFieldValueByLang(source, 'name', ctx) || source.name
+      },
+    }),
+    description: t.string({
+      resolve(source, _, ctx) {
+        return (
+          getFieldValueByLang(source, 'description', ctx) || source.description
+        )
+      },
+    }),
+    intro: t.string({
+      resolve(source, _, ctx) {
+        return getFieldValueByLang(source, 'intro', ctx) || source.intro
+      },
+    }),
+    content: t.string({
+      resolve(source, _, ctx) {
+        return getFieldValueByLang(source, 'content', ctx) || source.content
+      },
+    }),
     code: t.exposeString('code'),
     image: t.exposeString('image'),
     path: t.exposeString('path'),

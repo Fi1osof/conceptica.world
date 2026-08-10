@@ -112,7 +112,7 @@ export const theme = {
     popover: 1100,
     tooltip: 1200,
   },
-}
+} as const
 
 export type Theme = typeof theme
 
