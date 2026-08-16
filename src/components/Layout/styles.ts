@@ -2,6 +2,13 @@ import styled from 'styled-components'
 // import { TabType } from 'src/TabSwitcher/interfaces'
 import { theme } from 'src/theme'
 
+export const LayoutFooter = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+`
+
 export const LayoutStyled = styled.div`
   display: flex;
   min-height: 100dvh;

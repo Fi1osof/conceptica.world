@@ -7,6 +7,7 @@ import {
   LayoutTopBar,
   MobileMenuButton,
   LayoutInnerContainer,
+  LayoutFooter,
 } from './styles'
 import { SidebarMemo } from './Sidebar'
 import { ChatContent } from 'src/components/Chat/ChatWidget/ChatContent'
@@ -49,6 +50,15 @@ export const Layout: React.FC<LayoutProps> = ({ children, ...other }) => {
             {isHomePage && chatContent}
           </LayoutInnerContainer>
         </LayoutContentStyled>
+
+        <LayoutFooter>
+          <a href="https://github.com/haih-net/agent" target="_blank">
+            Powered by HAIH Agent
+          </a>
+          <a href="https://fi1osof.ru" target="_blank">
+            By 𝕱
+          </a>
+        </LayoutFooter>
       </LayoutMain>
 
       {!isHomePage && <ChatWidget />}
