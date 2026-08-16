@@ -23,7 +23,7 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: 'Nunito', sans-serif;
-    font-size: 16px;
+    font-size: 17px;
   }
 
   #__next {

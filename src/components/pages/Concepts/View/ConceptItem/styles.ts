@@ -1,6 +1,12 @@
 import styled, { css } from 'styled-components'
 import { ConceptItemVariant } from './interfaces'
 
+export const ConceptItemImgStyled = styled.img`
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+`
+
 export const ConceptItemMetaStyled = styled.div`
   display: flex;
   flex-direction: column;
@@ -10,7 +16,7 @@ export const ConceptItemMetaStyled = styled.div`
   color: #6b7280;
 `
 
-export const ConceptItemTitleStyled = styled.h3`
+export const ConceptItemTitleStyled = styled.h1`
   text-overflow: ellipsis;
   max-width: 100%;
   overflow: hidden;
@@ -50,15 +56,15 @@ export const ConceptItemStyled = styled.div<ConceptItemStyledProps>`
 
   min-width: 0;
 
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-  }
-
   ${({ $variant }) => {
     switch ($variant) {
       case 'list':
-        return css``
+        return css`
+          &:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+          }
+        `
 
       case 'full':
         return css`

@@ -14,7 +14,7 @@ type getConceptsConnectionQueryVariablesProps =
 export function getConceptsConnectionQueryVariables({
   page,
   take = 12,
-  currentUser: _currentUser,
+  currentUser,
   where,
   ...other
 }: getConceptsConnectionQueryVariablesProps): ConceptsConnectionQueryVariables & {
@@ -23,7 +23,8 @@ export function getConceptsConnectionQueryVariables({
   const variable = {
     ...other,
     where: {
-      visibility: KbConceptVisibility.PUBLIC,
+      visibility:
+        currentUser?.sudo === true ? undefined : KbConceptVisibility.PUBLIC,
       ...where,
     },
     skip: (page - 1) * take,

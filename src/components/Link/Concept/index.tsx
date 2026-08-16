@@ -17,6 +17,7 @@ export const ConceptLink: React.FC<ConceptLinkProps> = ({
   object,
   children,
   className,
+  ...other
 }) => {
   if (!object) {
     return null
@@ -25,7 +26,7 @@ export const ConceptLink: React.FC<ConceptLinkProps> = ({
   const href = createConceptLink(object)
 
   return (
-    <Link href={href} className={className}>
+    <Link href={href} className={className} {...other}>
       {children || object.name || object.id}
     </Link>
   )
