@@ -5,6 +5,7 @@ import { buildPostWhere } from 'server/schema/types/Post/helpers/buildPostWhere'
 import { buildUserWhere } from 'server/schema/types/User/helpers/buildUserWhere'
 
 export enum SitemapSection {
+  concepts = '/sitemap/concepts.xml',
   index = '/sitemap.xml',
   main = '/sitemap/main.xml',
   posts = '/sitemap/posts.xml',
@@ -53,10 +54,7 @@ export const generateSitemapIndex = async ({
         <loc>${siteOrigin}/sitemap/main.xml</loc>
     </sitemap>
     <sitemap>
-        <loc>${siteOrigin}${SitemapSection.posts}</loc>
-    </sitemap>
-    <sitemap>
-        <loc>${siteOrigin}${SitemapSection.users}</loc>
+        <loc>${siteOrigin}${SitemapSection.concepts}</loc>
     </sitemap>
 </sitemapindex>`
 }
@@ -76,6 +74,37 @@ export const generateSitemapMain = async (
       updatedAt: monday.toISOString().split('T')[0],
     },
   ]
+
+  return generateSitemapXML(xmlData, props)
+}
+
+export const generateSitemapConcepts = async (
+  props: SitemapGeneratorProps,
+): Promise<string> => {
+  const objects = await prismaClient.kBConcept.findMany({
+    where: {
+      visibility: {
+        not: 'unpublished',
+      },
+      uri: {
+        not: null,
+      },
+    },
+    orderBy: {
+      updatedAt: 'desc',
+    },
+  })
+
+  const xmlData: UrlItem[] = objects
+    .map((n) => {
+      const { updatedAt, uri } = n
+
+      return {
+        url: uri,
+        updatedAt: updatedAt.toISOString(),
+      }
+    })
+    .filter((n): n is UrlItem => !!n.url)
 
   return generateSitemapXML(xmlData, props)
 }
@@ -148,18 +177,21 @@ export const generateSitemap = async (req: Request, res: Response) => {
   const siteOrigin = `${req.protocol}://${req.headers.host}`
 
   switch (req.url) {
+    case SitemapSection.concepts:
+      res.send(await generateSitemapConcepts({ siteOrigin }))
+      break
     case SitemapSection.index:
       res.send(await generateSitemapIndex({ siteOrigin }))
       break
     case SitemapSection.main:
       res.send(await generateSitemapMain({ siteOrigin }))
       break
-    case SitemapSection.posts:
-      res.send(await generateSitemapPosts({ siteOrigin }))
-      break
-    case SitemapSection.users:
-      res.send(await generateSitemapUsers({ siteOrigin }))
-      break
+    // case SitemapSection.posts:
+    //   res.send(await generateSitemapPosts({ siteOrigin }))
+    //   break
+    // case SitemapSection.users:
+    //   res.send(await generateSitemapUsers({ siteOrigin }))
+    //   break
     default:
       res.status(404).send('Not found')
   }
