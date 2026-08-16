@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client'
+import slugify from '@sindresorhus/slugify'
 import { builder } from '../../../builder'
 import { KBConceptCreateInput } from '../inputs'
 import { createCUID } from '../../helpers/createCUID'
@@ -15,11 +16,28 @@ builder.mutationField('createConcept', (t) =>
       }
 
       const {
-        data: { name, quality, data: dataArg, visibility, uri, ...other },
+        data: {
+          name,
+          quality,
+          data: dataArg,
+          visibility,
+          uri: uriArg,
+          ...other
+        },
       } = args
 
       if (!name) {
         throw new Error('name required')
+      }
+
+      let uri = uriArg
+
+      if (!uri) {
+        const urlSection = '/concepts'
+
+        const slug = slugify(name)
+
+        uri = [urlSection, slug].join('/')
       }
 
       const id = createCUID()
