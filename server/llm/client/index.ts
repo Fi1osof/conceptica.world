@@ -141,7 +141,7 @@ export class LLMClient {
     const CONNECT_TIMEOUT_MS = 15_000
 
     // TODO Add argument
-    const RESPONSE_TIMEOUT_MS = 60_000
+    const RESPONSE_TIMEOUT_MS = 300_000
 
     const connectController = new AbortController()
     const connectTimer = setTimeout(
