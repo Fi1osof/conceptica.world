@@ -3,13 +3,104 @@ import { Request, Response } from 'express'
 import { prismaClient } from 'server/prisma'
 import { buildPostWhere } from 'server/schema/types/Post/helpers/buildPostWhere'
 import { buildUserWhere } from 'server/schema/types/User/helpers/buildUserWhere'
+import { createConceptLink } from 'src/components/Link/Concept'
+import { getLocaleFromRequest } from 'server/helpers/getLocaleFromRequest'
+import { LOCALE_CODES as allLocales } from 'src/Custom/components/LocaleSwitcher/interfaces'
+
+const intLocales = allLocales.toSorted((a, b) => {
+  if (a === b) {
+    return 0
+  }
+  if (b === 'ru') {
+    return +1
+  }
+  if (a === 'ru') {
+    return -1
+  }
+
+  return a.charCodeAt(0) - b.charCodeAt(0)
+})
+
+const getLocalePrefix = (locale: string): string => {
+  return locale !== 'ru' ? `/${locale}` : ''
+}
+
+const generateHreflangLinks = (
+  siteOrigin: string,
+  url: string,
+  defaultLocale: string,
+): string => {
+  let links = ''
+  const defaultPrefix = getLocalePrefix(defaultLocale)
+
+  links += `    <xhtml:link rel="alternate" hreflang="x-default" href="${siteOrigin}${defaultPrefix}${url}" />\n`
+  for (const code of intLocales) {
+    const prefix = getLocalePrefix(code)
+    links += `    <xhtml:link rel="alternate" hreflang="${code}" href="${siteOrigin}${prefix}${url}" />\n`
+  }
+
+  return links
+}
+
+const generateUrlBlocks = (
+  siteOrigin: string,
+  item: UrlItem,
+  priority: number,
+): string => {
+  let xml = ''
+  for (const localeCode of intLocales) {
+    const locPrefix = getLocalePrefix(localeCode)
+
+    xml += '  <url>\n'
+    xml += `    <loc>${siteOrigin}${locPrefix}${item.url}</loc>\n`
+    xml += `    <lastmod>${item.updatedAt}</lastmod>\n`
+    xml += `    <priority>${priority}</priority>\n`
+    xml += generateHreflangLinks(siteOrigin, item.url, 'ru')
+    xml += '  </url>\n'
+  }
+  return xml
+}
 
 export enum SitemapSection {
-  concepts = '/sitemap/concepts.xml',
   index = '/sitemap.xml',
   main = '/sitemap/main.xml',
-  posts = '/sitemap/posts.xml',
-  users = '/sitemap/users.xml',
+  concepts = '/sitemap/concepts.xml',
+
+  // posts = '/sitemap/posts.xml',
+  // users = '/sitemap/users.xml',
+}
+
+async function getKbConcepts(): Promise<UrlItem[]> {
+  return prismaClient.kBConcept
+    .findMany({
+      where: {
+        visibility: {
+          not: 'unpublished',
+        },
+      },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    })
+    .then((r) => {
+      return r
+        .map<UrlItem | undefined>((n) => {
+          const { uri, visibility } = n
+
+          if (!uri || visibility === 'unpublished') {
+            return
+          }
+
+          return {
+            updatedAt: new Date(n.updatedAt).toISOString(),
+            url: createConceptLink({
+              ...n,
+              uri,
+            }),
+          }
+        })
+        .filter((n) => !!n)
+    })
 }
 
 type UrlItem = {
@@ -28,24 +119,35 @@ const generateSitemapXML = (
     priority = 0.9,
   }: SitemapGeneratorProps & {
     priority?: number
+    locale?: string
   },
 ): string => {
+  const isInternational = true
+
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"'
+  if (isInternational) {
+    xml += ' xmlns:xhtml="http://www.w3.org/1999/xhtml"'
+  }
+  xml += '>\n'
 
   items.forEach((item) => {
-    xml += '  <url>\n'
-    xml += `    <loc>${siteOrigin}${item.url}</loc>\n`
-    xml += `    <lastmod>${item.updatedAt}</lastmod>\n`
-    xml += `    <priority>${priority}</priority>\n`
-    xml += '  </url>\n'
+    if (isInternational) {
+      xml += generateUrlBlocks(siteOrigin, item, priority)
+    } else {
+      xml += '  <url>\n'
+      xml += `    <loc>${siteOrigin}${item.url}</loc>\n`
+      xml += `    <lastmod>${item.updatedAt}</lastmod>\n`
+      xml += `    <priority>${priority}</priority>\n`
+      xml += '  </url>\n'
+    }
   })
 
   xml += '</urlset>'
   return xml
 }
 
-export const generateSitemapIndex = async ({
+const generateSitemapIndex = async ({
   siteOrigin,
 }: SitemapGeneratorProps): Promise<string> => {
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -59,7 +161,7 @@ export const generateSitemapIndex = async ({
 </sitemapindex>`
 }
 
-export const generateSitemapMain = async (
+const generateSitemapMain = async (
   props: SitemapGeneratorProps,
 ): Promise<string> => {
   const now = new Date()
@@ -73,38 +175,19 @@ export const generateSitemapMain = async (
       url: `/`,
       updatedAt: monday.toISOString().split('T')[0],
     },
+    // {
+    //   url: `/app`,
+    //   updatedAt: monday.toISOString().split('T')[0],
+    // },
   ]
 
   return generateSitemapXML(xmlData, props)
 }
 
-export const generateSitemapConcepts = async (
+const generateSitemapConcepts = async (
   props: SitemapGeneratorProps,
 ): Promise<string> => {
-  const objects = await prismaClient.kBConcept.findMany({
-    where: {
-      visibility: {
-        not: 'unpublished',
-      },
-      uri: {
-        not: null,
-      },
-    },
-    orderBy: {
-      updatedAt: 'desc',
-    },
-  })
-
-  const xmlData: UrlItem[] = objects
-    .map((n) => {
-      const { updatedAt, uri } = n
-
-      return {
-        url: uri,
-        updatedAt: updatedAt.toISOString(),
-      }
-    })
-    .filter((n): n is UrlItem => !!n.url)
+  const xmlData: UrlItem[] = await getKbConcepts()
 
   return generateSitemapXML(xmlData, props)
 }
@@ -172,19 +255,24 @@ export const generateSitemapUsers = async (
 }
 
 export const generateSitemap = async (req: Request, res: Response) => {
+  const locale = getLocaleFromRequest(req)
+
   res.header('Content-Type', 'application/xml')
 
   const siteOrigin = `${req.protocol}://${req.headers.host}`
 
+  const props = { siteOrigin, locale }
+
   switch (req.url) {
     case SitemapSection.concepts:
-      res.send(await generateSitemapConcepts({ siteOrigin }))
+      res.send(await generateSitemapConcepts(props))
       break
+
     case SitemapSection.index:
-      res.send(await generateSitemapIndex({ siteOrigin }))
+      res.send(await generateSitemapIndex(props))
       break
     case SitemapSection.main:
-      res.send(await generateSitemapMain({ siteOrigin }))
+      res.send(await generateSitemapMain(props))
       break
     // case SitemapSection.posts:
     //   res.send(await generateSitemapPosts({ siteOrigin }))
