@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 import {
   LayoutContentStyled,
   LayoutStyled,
@@ -18,8 +18,9 @@ import { LocaleSwitcher } from 'src/Custom/components/LocaleSwitcher'
 type LayoutProps = React.PropsWithChildren
 
 export const Layout: React.FC<LayoutProps> = ({ children, ...other }) => {
-  const router = useRouter()
-  const isHomePage = router.pathname === '/'
+  // const router = useRouter()
+  // const isHomePage = router.pathname === '/'
+  const isHomePage = false
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const toggleSidebar = useCallback(() => {
