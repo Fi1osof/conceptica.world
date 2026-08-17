@@ -7,10 +7,15 @@ import { UserStatusEnum, useUserQuery } from 'src/gql/generated'
 import { SeoHeaders } from 'src/components/seo/SeoHeaders'
 import { JsonLd } from 'src/components/seo/JsonLd'
 import { Page } from '../../_App/interfaces'
-import { createPerson } from 'src/components/seo/JsonLd/helpers'
+import { createProfilePage } from 'src/components/seo/JsonLd/helpers'
 import { createUserLink } from 'src/components/Link/User'
+import { getResizedImagePath } from 'src/helpers/getResizedImagePath'
+import { useAppContext } from 'src/components/AppContext'
+import { getLocalePrefix } from 'src/Custom/Lexicon/helpers/getLocalePrefix'
 
 export const UserPage: Page<UserPageProps> = ({ userId, siteOrigin }) => {
+  const { locale } = useAppContext()
+  const localePrefix = getLocalePrefix(locale)
   const variables = getUserQueryVariables(userId)
 
   const response = useUserQuery({
@@ -22,16 +27,32 @@ export const UserPage: Page<UserPageProps> = ({ userId, siteOrigin }) => {
 
   const searchable = user?.status === UserStatusEnum.ACTIVE ? true : false
 
-  const personSchema = useMemo(() => {
-    if (!user) {
+  const imageUrl = user?.image
+    ? `${siteOrigin}${getResizedImagePath({ path: user.image, size: 'big' })}`
+    : undefined
+
+  const userUrl = user
+    ? `${siteOrigin}${localePrefix}${createUserLink(user)}`
+    : undefined
+
+  const profileSchema = useMemo(() => {
+    if (!user || !userUrl) {
       return null
     }
 
-    return createPerson({
-      name: user.fullname || user.username || '',
-      image: user.image ? `/images/resized/big/${user.image}` : undefined,
+    return createProfilePage({
+      url: userUrl,
+      person: {
+        '@id': `${userUrl}#person`,
+        name: user.fullname || user.username || '',
+        alternateName: user.username || undefined,
+        identifier: user.id,
+        description: user.intro || undefined,
+        url: userUrl,
+        image: imageUrl,
+      },
     })
-  }, [user])
+  }, [user, userUrl, imageUrl])
 
   return user ? (
     <>
@@ -44,8 +65,11 @@ export const UserPage: Page<UserPageProps> = ({ userId, siteOrigin }) => {
         nofollow={!searchable}
         canonical={createUserLink(user)}
         siteOrigin={siteOrigin}
+        description={user.intro}
+        image={imageUrl}
+        type="website"
       />
-      {personSchema && <JsonLd data={personSchema} />}
+      {profileSchema && <JsonLd data={profileSchema} />}
       {user && <UserPageView user={user} />}
     </>
   ) : null

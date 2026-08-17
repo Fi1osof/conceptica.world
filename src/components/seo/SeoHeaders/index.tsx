@@ -1,12 +1,7 @@
 import Head from 'next/head'
 import { useAppContext } from 'src/components/AppContext'
 import { LOCALE_CODES } from 'src/Custom/components/LocaleSwitcher/interfaces'
-
-const intLocales = LOCALE_CODES.filter((n) => n !== 'ru')
-
-const getLocalePrefix = (locale: string): string => {
-  return locale !== 'ru' ? `/${locale}` : ''
-}
+import { getLocalePrefix } from 'src/Custom/Lexicon/helpers/getLocalePrefix'
 
 export interface SeoHeadersProps {
   title: string
@@ -16,6 +11,11 @@ export interface SeoHeadersProps {
   canonical: string | null | undefined
   siteOrigin: string | undefined
   keywords?: string | undefined
+  image?: string | null
+  type?: 'website' | 'article'
+  publishedTime?: string | null
+  modifiedTime?: string | null
+  authorUrl?: string | null
 }
 
 export const SeoHeaders: React.FC<SeoHeadersProps> = ({
@@ -26,10 +26,15 @@ export const SeoHeaders: React.FC<SeoHeadersProps> = ({
   canonical,
   siteOrigin,
   keywords,
+  image,
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+  authorUrl,
 }) => {
   const { locale } = useAppContext()
 
-  const isInternational = locale !== 'ru'
+  const isInternational = true
   const localePrefix = getLocalePrefix(locale)
 
   let href = siteOrigin
@@ -49,7 +54,7 @@ export const SeoHeaders: React.FC<SeoHeadersProps> = ({
       {isInternational &&
         canonical &&
         siteOrigin &&
-        intLocales.map((code) => (
+        LOCALE_CODES.map((code) => (
           <link
             key={code}
             rel="alternate"
@@ -62,7 +67,7 @@ export const SeoHeaders: React.FC<SeoHeadersProps> = ({
         <link
           rel="alternate"
           hrefLang="x-default"
-          href={`${siteOrigin}${canonical}`}
+          href={`${siteOrigin}${canonical === '/' ? '' : canonical}`}
         />
       )}
 
@@ -75,6 +80,31 @@ export const SeoHeaders: React.FC<SeoHeadersProps> = ({
       />
 
       {keywords && <meta name="keywords" content={keywords} />}
+
+      {/* Open Graph */}
+      <meta property="og:title" content={title} />
+      <meta property="og:type" content={type} />
+      {description && <meta property="og:description" content={description} />}
+      {href && <meta property="og:url" content={href} />}
+      {image && <meta property="og:image" content={image} />}
+      {type === 'article' && publishedTime && (
+        <meta property="article:published_time" content={publishedTime} />
+      )}
+      {type === 'article' && modifiedTime && (
+        <meta property="article:modified_time" content={modifiedTime} />
+      )}
+      {type === 'article' && authorUrl && (
+        <meta property="article:author" content={authorUrl} />
+      )}
+
+      {/* Twitter Cards */}
+      <meta
+        name="twitter:card"
+        content={image ? 'summary_large_image' : 'summary'}
+      />
+      <meta name="twitter:title" content={title} />
+      {description && <meta name="twitter:description" content={description} />}
+      {image && <meta name="twitter:image" content={image} />}
     </Head>
   )
 }

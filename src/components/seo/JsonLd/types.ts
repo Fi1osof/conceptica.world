@@ -5,9 +5,19 @@ export interface WithContext<T> {
 
 export interface PersonSchema {
   '@type': 'Person'
+  '@id'?: string
   name?: string
+  alternateName?: string
+  identifier?: string
+  description?: string
   url?: string
   image?: string
+}
+
+export interface ProfilePageSchema {
+  '@type': 'ProfilePage'
+  url: string
+  mainEntity: PersonSchema
 }
 
 export interface OrganizationSchema {
@@ -131,3 +141,4 @@ export type SchemaType =
   | (WithContext<'Person'> & PersonSchema)
   | (WithContext<'Organization'> & OrganizationSchema)
   | (WithContext<'LocalBusiness'> & LocalBusinessSchema)
+  | (WithContext<'ProfilePage'> & ProfilePageSchema)

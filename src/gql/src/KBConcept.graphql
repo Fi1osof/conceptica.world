@@ -100,7 +100,7 @@ mutation uploadKbConcept(
 
 fragment KBConceptNoNesting on KBConcept {
   id
-  # createdAt
+  createdAt
   updatedAt
   type
   name

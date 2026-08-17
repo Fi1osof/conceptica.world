@@ -10,6 +10,7 @@ import {
   BreadcrumbListSchema,
   WithContext,
   LocalBusinessSchema,
+  ProfilePageSchema,
 } from './types'
 
 export const createImageObject = (
@@ -103,4 +104,17 @@ export const createLocalBusiness = (
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
   ...data,
+})
+
+export const createProfilePage = (data: {
+  url: string
+  person: Omit<PersonSchema, '@type'>
+}): WithContext<'ProfilePage'> & ProfilePageSchema => ({
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  url: data.url,
+  mainEntity: {
+    '@type': 'Person',
+    ...data.person,
+  },
 })
