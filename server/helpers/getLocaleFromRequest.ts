@@ -11,7 +11,7 @@ export function getLocaleFromRequest(req: PrismaContext['req']): Locale {
 
   // Сначала проверяем локаль по суффиксу в path
   if (pathname && typeof pathname === 'string') {
-    const match = pathname.match(/^\/api\/([a-z]{2})(\/|$)/)
+    const match = pathname.match(/^\/api\/([a-z]{2,3})(\/|$)/)
 
     if (match) {
       const pathLocale = match[1]
