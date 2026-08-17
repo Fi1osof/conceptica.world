@@ -11,6 +11,8 @@ import { LangFields } from '../interfaces'
 import { removeInvalidLinks } from 'server/schema/types/Custom/helpers/validateInternalLinks'
 import { LOCALES } from 'src/Custom/components/LocaleSwitcher/interfaces'
 
+type langKey = keyof Omit<typeof LOCALES, 'ru'>
+
 async function mergeLangFields(
   existing: LangFields | null,
   parsed: LangFields,
@@ -45,17 +47,15 @@ async function mergeLangFields(
 type updateConceptLangProps = {
   ctx: PrismaContext
   concept: KBConcept
-  force: boolean
   validUris: Set<string>
-  langsLimit: number
+  targetLangs: langKey[]
 }
 
 export async function updateConceptLang({
   ctx,
   concept,
-  force,
   validUris,
-  langsLimit,
+  targetLangs,
 }: updateConceptLangProps): Promise<true | null> {
   const { name, description, intro, content } = concept
 
@@ -80,27 +80,7 @@ export async function updateConceptLang({
     fieldsToTranslate.push({ field: 'content', value: content })
   }
 
-  if (fieldsToTranslate.length === 0) {
-    return null
-  }
-
-  type langKey = keyof Omit<typeof LOCALES, 'ru'>
-
-  const targetLangs: Array<langKey> = []
-
-  const langs = Object.keys(LOCALES).filter((n): n is langKey => n !== 'ru')
-
-  for (const n of langs) {
-    if ((force || !concept[n]) && !targetLangs.includes(n)) {
-      targetLangs.push(n)
-    }
-
-    if (langsLimit && targetLangs.length >= langsLimit) {
-      break
-    }
-  }
-
-  if (targetLangs.length === 0) {
+  if (fieldsToTranslate.length === 0 || targetLangs.length === 0) {
     return null
   }
 

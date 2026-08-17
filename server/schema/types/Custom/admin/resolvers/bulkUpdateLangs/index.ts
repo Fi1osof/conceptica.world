@@ -3,7 +3,10 @@ import { builder } from 'server/schema/builder'
 import { KBConceptWhereInput } from 'server/schema/types/KBConcept'
 import { buildKBConceptWhere } from 'server/schema/types/KBConcept/helpers/buildWhere'
 import { updateConceptLang } from './helpers/updateConceptLang'
-import { LOCALE_CODES } from 'src/Custom/components/LocaleSwitcher/interfaces'
+import {
+  LOCALE_CODES,
+  LOCALES,
+} from 'src/Custom/components/LocaleSwitcher/interfaces'
 import { buildValidUrisSet } from '../../../helpers/buildValidUrisSet'
 
 builder.mutationField('adminBulkUpdateLangs', (t) =>
@@ -13,11 +16,12 @@ builder.mutationField('adminBulkUpdateLangs', (t) =>
       where: t.arg({ type: KBConceptWhereInput, required: true }),
       limit: t.arg.int({ required: true }),
       langsLimit: t.arg.int({ required: true }),
+      processAllLangs: t.arg.boolean({ required: true }),
       force: t.arg.boolean({ required: true }),
     },
     resolve: async (
       _root,
-      { where: whereArg, limit, langsLimit, force },
+      { where: whereArg, limit, langsLimit, processAllLangs, force },
       ctx,
     ) => {
       const { currentUser, prisma } = ctx
@@ -79,31 +83,67 @@ builder.mutationField('adminBulkUpdateLangs', (t) =>
           continue
         }
 
-        await updateConceptLang({
-          ctx,
-          concept,
-          force,
-          validUris,
-          langsLimit,
-        })
-          .then((r) => {
-            if (r === null) {
-              skipped++
-            } else if (r === true) {
-              success++
-            }
-          })
-          .catch((error) => {
-            console.error('error', error)
+        type langKey = keyof Omit<typeof LOCALES, 'ru'>
+        const allLangs = Object.keys(LOCALES).filter(
+          (n): n is langKey => n !== 'ru',
+        )
 
-            failed.push({
-              error: {
-                message: error.message,
-                stack: error.stack,
-              },
-              concept,
-            })
+        const langsToProcess: langKey[] = []
+        for (const lang of allLangs) {
+          if (force || !concept[lang]) {
+            langsToProcess.push(lang)
+          }
+        }
+
+        if (langsToProcess.length === 0) {
+          skipped++
+          processed++
+          if (limit && processed >= limit) {
+            break
+          }
+          continue
+        }
+
+        const batchSize = langsLimit === 0 ? langsToProcess.length : langsLimit
+        const batches: langKey[][] = []
+
+        if (processAllLangs) {
+          for (let i = 0; i < langsToProcess.length; i += batchSize) {
+            batches.push(langsToProcess.slice(i, i + batchSize))
+          }
+        } else {
+          batches.push(langsToProcess.slice(0, batchSize))
+        }
+
+        let conceptSuccess = false
+        for (const batch of batches) {
+          await updateConceptLang({
+            ctx,
+            concept,
+            validUris,
+            targetLangs: batch,
           })
+            .then((r) => {
+              if (r === true) {
+                conceptSuccess = true
+              }
+            })
+            .catch((error) => {
+              console.error('error', error)
+
+              failed.push({
+                error: {
+                  message: error.message,
+                  stack: error.stack,
+                },
+                concept,
+              })
+            })
+        }
+
+        if (conceptSuccess) {
+          success++
+        }
 
         processed++
 
