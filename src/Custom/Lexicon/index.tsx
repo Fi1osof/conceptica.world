@@ -3,6 +3,7 @@ import i18n, { TFunction } from 'i18next'
 import { I18nextProvider, useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 import {
+  DEFAULT_LOCALE,
   isLocale,
   Locale,
   LOCALE_CODES,
@@ -25,7 +26,9 @@ type LexiconContextValue = {
   locale: Locale
 }
 
-const LexiconContext = createContext<LexiconContextValue>({ locale: 'en' })
+const LexiconContext = createContext<LexiconContextValue>({
+  locale: DEFAULT_LOCALE,
+})
 
 const i18nInstance = i18n.createInstance()
 
@@ -38,8 +41,8 @@ const emptyResources = LOCALE_CODES.reduce(
 )
 
 i18nInstance.init({
-  lng: 'en',
-  fallbackLng: 'en',
+  lng: DEFAULT_LOCALE,
+  fallbackLng: DEFAULT_LOCALE,
   supportedLngs: LOCALE_CODES,
   ns: ['common'],
   defaultNS: 'common',
@@ -57,7 +60,9 @@ export const LexiconProvider: React.FC<LexiconProviderProps> = ({
   children,
 }) => {
   const router = useRouter()
-  const locale: Locale = isLocale(router.locale) ? router.locale : 'en'
+  const locale: Locale = isLocale(router.locale)
+    ? router.locale
+    : DEFAULT_LOCALE
 
   useMemo(() => {
     if (i18nInstance.language !== locale) {

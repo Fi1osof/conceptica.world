@@ -19,7 +19,7 @@ import { AppContextProvider } from 'src/components/AppContext'
 import { SnackbarProvider, Snackbar } from 'src/ui-kit/Snackbar'
 import { getInitialProps } from './getInitialProps'
 import { useScrollPage } from 'src/hooks/useScrollPage'
-import { Layout } from 'src/components/Layout'
+import { CustomLayout as Layout } from 'src/Custom/components/Layout'
 import { ChatProvider } from 'src/components/Chat/ChatWidget/context'
 import { LexiconProvider } from 'src/Custom/Lexicon'
 

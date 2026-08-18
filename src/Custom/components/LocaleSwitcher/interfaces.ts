@@ -39,3 +39,21 @@ export const LOCALE_OPTIONS = Object.entries(LOCALES).map(([code, data]) => ({
 export function isLocale(value: string | undefined): value is Locale {
   return !!value && (LOCALE_CODES as string[]).includes(value)
 }
+
+export const DEFAULT_LOCALE: Locale = 'ru'
+
+/** Publication date, no time, formatted per locale conventions. */
+export function formatDate(
+  iso: string,
+  locale: Locale = DEFAULT_LOCALE,
+): string {
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) {
+    return iso
+  }
+  return d.toLocaleDateString(locale, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+}
