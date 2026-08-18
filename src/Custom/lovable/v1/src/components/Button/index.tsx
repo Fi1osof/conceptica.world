@@ -1,5 +1,7 @@
 import { styled, css } from 'styled-components'
 import { theme } from '@/theme'
+import React from 'react'
+import Link from 'next/link'
 
 export type ButtonVariant = 'primary' | 'ghost' | 'soft' | 'outline'
 
@@ -68,17 +70,13 @@ export const ButtonStyled = styled.button<{ $variant: ButtonVariant }>`
   ${({ $variant }) => variants[$variant]}
 `
 
-export const ButtonLinkStyled = styled.a<{ $variant: ButtonVariant }>`
+export const ButtonLinkStyled = styled(Link)<{ $variant: ButtonVariant }>`
   ${base}
   ${({ $variant }) => variants[$variant]}
 `
 
-export type ButtonProps = {
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant
-  children?: React.ReactNode
-  className?: string
-  type?: 'button' | 'submit'
-  onClick?: () => void
   ariaLabel?: string
 }
 
@@ -89,6 +87,7 @@ export function Button({
   type = 'button',
   onClick,
   ariaLabel,
+  ...other
 }: ButtonProps) {
   return (
     <ButtonStyled
@@ -97,6 +96,7 @@ export function Button({
       type={type}
       onClick={onClick}
       aria-label={ariaLabel}
+      {...other}
     >
       {children}
     </ButtonStyled>

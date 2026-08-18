@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { theme, media } from '@/theme'
+import Link from 'next/link'
 
 export const AboutWrap = styled.div`
   padding-bottom: ${theme.lovable.spacing.section};
@@ -126,7 +127,7 @@ export const Strong = styled.strong`
   font-weight: ${theme.lovable.fontWeight.semibold};
 `
 
-export const InlineLink = styled.a`
+export const InlineLink = styled(Link)`
   color: ${theme.lovable.color.accent};
   text-decoration: none;
   border-bottom: 1px solid ${theme.lovable.color.accentSoft};
@@ -468,7 +469,7 @@ export const CtaText = styled.p`
   max-width: 42ch;
 `
 
-export const CtaLink = styled.a`
+export const CtaLink = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 0.4em;

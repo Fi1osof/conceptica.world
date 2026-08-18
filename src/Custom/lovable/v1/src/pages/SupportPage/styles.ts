@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { theme, media } from '@/theme'
+import Link from 'next/link'
 
 export const Wrap = styled.div`
   padding-bottom: ${theme.lovable.spacing.section};
@@ -420,7 +421,7 @@ export const CtaText = styled.p`
   max-width: 42ch;
 `
 
-export const CtaLink = styled.a`
+export const CtaLink = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 0.4em;

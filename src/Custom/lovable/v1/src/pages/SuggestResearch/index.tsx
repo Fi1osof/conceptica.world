@@ -1,4 +1,6 @@
 import { Container } from '@/components/Container'
+import { useLexicon } from 'src/Custom/Lexicon'
+import { suggestResearchLexicon } from './lexicon'
 import {
   Wrap,
   Hero,
@@ -35,19 +37,34 @@ import {
   CtaText,
   CtaLink,
 } from './styles'
+import { useOpenChatWithMessage } from 'src/components/Chat/hooks/useOpenChatWithMessage'
+import { Trans } from 'react-i18next'
 
 export function LovableSuggestResearchPage() {
+  const { t } = useLexicon(suggestResearchLexicon)
+  const chatHandler = useOpenChatWithMessage()
+
+  const guideList = t('howToDescribe.guideList', {
+    returnObjects: true,
+  }) as string[] | undefined
+
+  const steps = t('whatHappensNext.steps', {
+    returnObjects: true,
+  }) as
+    | {
+        num: string
+        title: string
+        text: string
+      }[]
+    | undefined
+
   return (
     <Wrap>
       <Hero>
         <Container>
-          <Eyebrow>Предложить исследование</Eyebrow>
-          <HeroTitle>Расскажите вопрос своими словами</HeroTitle>
-          <HeroLead>
-            Есть вопрос, который давно не даёт покоя? Что-то, что вы хотите
-            понять, но пока не нашли хорошего объяснения? Расскажите об этом
-            нашему AI-агенту.
-          </HeroLead>
+          <Eyebrow>{t('hero.eyebrow')}</Eyebrow>
+          <HeroTitle>{t('hero.title')}</HeroTitle>
+          <HeroLead>{t('hero.lead')}</HeroLead>
         </Container>
       </Hero>
 
@@ -56,58 +73,65 @@ export function LovableSuggestResearchPage() {
           <MainGrid>
             <div>
               <SectionHead>
-                <Eyebrow>Как описать</Eyebrow>
-                <SectionTitle>Не нужно искать правильные слова</SectionTitle>
+                <Eyebrow>{t('howToDescribe.eyebrow')}</Eyebrow>
+                <SectionTitle>{t('howToDescribe.title')}</SectionTitle>
                 <Paragraph>
-                  Не нужно искать правильные термины, выбирать категорию или
-                  пытаться красиво сформулировать тему. Просто объясните{' '}
-                  <Strong>своими словами</Strong>:
+                  <Trans
+                    i18nKey="howToDescribe.p1"
+                    components={{
+                      strong: <Strong />,
+                    }}
+                  />
                 </Paragraph>
               </SectionHead>
               <GuideList>
-                <li>что вас интересует;</li>
-                <li>что вы уже знаете или думаете об этом;</li>
-                <li>что именно вам непонятно;</li>
-                <li>почему этот вопрос для вас важен.</li>
+                {guideList?.map((item, i) => (
+                  <li
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={i}
+                  >
+                    {item}
+                  </li>
+                ))}
               </GuideList>
-              <Paragraph>
-                Агент поможет уточнить мысль, если это понадобится. Ваш вопрос
-                может стать темой одного из следующих исследований Conceptica.
-              </Paragraph>
+              <Paragraph>{t('howToDescribe.p2')}</Paragraph>
             </div>
 
             <FormCard>
-              <FormTitle>Опишите вопрос</FormTitle>
-              <FormHint>
-                Поля формы — заглушка. Логика отправки появится позже. Пока
-                можно писать что угодно.
-              </FormHint>
+              <FormTitle>{t('form.title')}</FormTitle>
+              <FormHint>{t('form.hint')}</FormHint>
 
-              <form>
+              <form onSubmit={chatHandler}>
+                <input
+                  type="hidden"
+                  name="Subject"
+                  value={t('form.hiddenSubject')}
+                />
+
                 <Field>
-                  <Label htmlFor="message">Текст сообщения</Label>
+                  <Label htmlFor="message">{t('form.messageLabel')}</Label>
                   <TextArea
                     id="message"
-                    name="message"
-                    placeholder="Я не знаю, как это правильно называется, но меня давно интересует вот что…"
+                    name="Message"
+                    placeholder={t('form.messagePlaceholder')}
                   />
                 </Field>
 
                 <Field>
-                  <Label htmlFor="contact">Контакты (необязательно)</Label>
+                  <Label htmlFor="contact">{t('form.contactLabel')}</Label>
                   <Input
                     id="contact"
-                    name="contact"
+                    name="Contact"
                     type="text"
-                    placeholder="email, telegram или другой способ связи"
+                    placeholder={t('form.contactPlaceholder')}
                   />
                 </Field>
 
                 <FormRow>
-                  <FormNote>
-                    Ответ обычно приходит в течение нескольких дней.
-                  </FormNote>
-                  <SubmitButton type="submit">Отправить →</SubmitButton>
+                  <FormNote>{t('form.note')}</FormNote>
+                  <SubmitButton type="submit" value="">
+                    {t('form.submit')}
+                  </SubmitButton>
                 </FormRow>
               </form>
             </FormCard>
@@ -118,35 +142,18 @@ export function LovableSuggestResearchPage() {
       <Section data-tint="true">
         <Container>
           <SectionHead>
-            <Eyebrow>Что происходит дальше</Eyebrow>
-            <SectionTitle>От вопроса до исследования</SectionTitle>
+            <Eyebrow>{t('whatHappensNext.eyebrow')}</Eyebrow>
+            <SectionTitle>{t('whatHappensNext.title')}</SectionTitle>
           </SectionHead>
 
           <StepsGrid>
-            <Step>
-              <StepNum>01</StepNum>
-              <StepTitle>Читаем вопросы</StepTitle>
-              <StepText>
-                Мы читаем предложенные вопросы и выбираем среди них темы для
-                будущих исследований.
-              </StepText>
-            </Step>
-            <Step>
-              <StepNum>02</StepNum>
-              <StepTitle>Уточняем мысль</StepTitle>
-              <StepText>
-                Если нужно, агент задаёт уточняющие вопросы, чтобы точнее
-                понять, что вас интересует.
-              </StepText>
-            </Step>
-            <Step>
-              <StepNum>03</StepNum>
-              <StepTitle>Сообщаем о результате</StepTitle>
-              <StepText>
-                Если вы оставили способ связи, мы напишем, когда материал по
-                теме появится.
-              </StepText>
-            </Step>
+            {steps?.map((step) => (
+              <Step key={step.num}>
+                <StepNum>{step.num}</StepNum>
+                <StepTitle>{step.title}</StepTitle>
+                <StepText>{step.text}</StepText>
+              </Step>
+            ))}
           </StepsGrid>
         </Container>
       </Section>
@@ -154,14 +161,11 @@ export function LovableSuggestResearchPage() {
       <Section>
         <Container variant="narrow">
           <SectionHead>
-            <Eyebrow>Не знаете, как сформулировать?</Eyebrow>
-            <SectionTitle>Так и напишите</SectionTitle>
+            <Eyebrow>{t('dontKnowHow.eyebrow')}</Eyebrow>
+            <SectionTitle>{t('dontKnowHow.title')}</SectionTitle>
           </SectionHead>
-          <Blockquote>
-            Я не знаю, как это правильно называется, но меня давно интересует
-            вот что…
-          </Blockquote>
-          <Paragraph>Этого достаточно.</Paragraph>
+          <Blockquote>{t('dontKnowHow.blockquote')}</Blockquote>
+          <Paragraph>{t('dontKnowHow.p1')}</Paragraph>
         </Container>
       </Section>
 
@@ -169,21 +173,15 @@ export function LovableSuggestResearchPage() {
         <Container>
           <CtaGrid>
             <CtaCard>
-              <CtaTitle>Читайте готовые концепты</CtaTitle>
-              <CtaText>
-                Возможно, похожая тема уже разобрана — загляните в список
-                концептов.
-              </CtaText>
-              <CtaLink href="/concepts">Открыть концепты →</CtaLink>
+              <CtaTitle>{t('cta.card1.title')}</CtaTitle>
+              <CtaText>{t('cta.card1.text')}</CtaText>
+              <CtaLink href="/concepts">{t('cta.card1.link')}</CtaLink>
             </CtaCard>
             <CtaCard>
-              <CtaTitle>Поддержать проект</CtaTitle>
-              <CtaText>
-                Если вы хотите помочь Conceptica существовать и развиваться,
-                проект можно поддержать.
-              </CtaText>
+              <CtaTitle>{t('cta.card2.title')}</CtaTitle>
+              <CtaText>{t('cta.card2.text')}</CtaText>
               <CtaLink href="/support" data-variant="ghost">
-                Поддержать →
+                {t('cta.card2.link')}
               </CtaLink>
             </CtaCard>
           </CtaGrid>

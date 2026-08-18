@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { theme, media } from '@/theme'
+import Link from 'next/link'
 
 export const Wrap = styled.div`
   padding-bottom: ${theme.lovable.spacing.section};
@@ -261,6 +262,8 @@ export const FormNote = styled.span`
 
 export const SubmitButton = styled.button`
   display: inline-flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
   align-items: center;
   justify-content: center;
   gap: 0.4em;
@@ -404,7 +407,7 @@ export const CtaText = styled.p`
   max-width: 42ch;
 `
 
-export const CtaLink = styled.a`
+export const CtaLink = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 0.4em;

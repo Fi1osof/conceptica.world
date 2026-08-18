@@ -8,24 +8,22 @@ import {
   AboutTitle,
   AboutBody,
 } from './styles'
+import { useLexicon } from 'src/Custom/Lexicon'
+import { mainPageLexicon } from '../lexicon'
 
 export function AboutBlock() {
+  const { t } = useLexicon(mainPageLexicon)
+
   return (
     <AboutSection>
       <Container>
         <AboutGrid>
           <AboutText>
-            <AboutEyebrow>О проекте</AboutEyebrow>
-            <AboutTitle>Что такое Conceptica?</AboutTitle>
-            <AboutBody>
-              Conceptica — попытка изменить способ обучения. Не пересказывать
-              чужие объяснения, а выяснять, что человек уже понимает, и
-              достраивать недостающее. Мы публикуем концепты — короткие тексты
-              об идеях, которые меняют способ смотреть на привычное, — и делаем
-              AI-агента, который выстраивает такой путь лично для вас.
-            </AboutBody>
+            <AboutEyebrow>{t('block.aboutBlock.eyebrow')}</AboutEyebrow>
+            <AboutTitle>{t('block.aboutBlock.title')}</AboutTitle>
+            <AboutBody>{t('block.aboutBlock.body')}</AboutBody>
             <ButtonLink href="/about" variant="outline">
-              Подробнее о проекте →
+              {t('block.aboutBlock.button')}
             </ButtonLink>
           </AboutText>
         </AboutGrid>

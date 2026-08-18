@@ -11,7 +11,7 @@ import { useConceptsConnectionQuery } from 'src/gql/generated'
 import { ConceptsView } from '../Concepts/View'
 
 export const MainPage: Page = (props) => {
-  const t = useLexicon(mainPageLexicon)
+  const { t } = useLexicon(mainPageLexicon)
 
   const siteTitle = t('seo.title')
   const siteUrl = props.siteOrigin

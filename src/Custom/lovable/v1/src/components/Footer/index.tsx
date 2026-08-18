@@ -1,4 +1,6 @@
 import { Container } from '@/components/Container'
+import { useLexicon } from 'src/Custom/Lexicon'
+import { footerLexicon } from './lexicon'
 import {
   FooterWrap,
   FooterInner,
@@ -14,6 +16,8 @@ import {
 } from './styles'
 
 export function Footer() {
+  const { t } = useLexicon(footerLexicon)
+
   return (
     <FooterWrap>
       <Container>
@@ -22,26 +26,18 @@ export function Footer() {
             <FooterLogo href="/">
               Concept<span>ica</span>
             </FooterLogo>
-            <FooterTagline>
-              Концепты и идеи, которые помогают смотреть на привычные вещи
-              иначе.
-            </FooterTagline>
+            <FooterTagline>{t('tagline')}</FooterTagline>
           </FooterBrand>
 
           <FooterCols>
             <FooterCol>
-              <FooterColTitle>Разделы</FooterColTitle>
-              <FooterLink href="/concepts">Концепты</FooterLink>
+              <FooterColTitle>{t('sections.title')}</FooterColTitle>
+              <FooterLink href="/concepts">{t('sections.concepts')}</FooterLink>
               <FooterLink href="/suggest-research">
-                Предложить исследование
+                {t('sections.suggestResearch')}
               </FooterLink>
-              <FooterLink href="/about">О проекте</FooterLink>
-              <FooterLink href="/support">Поддержать</FooterLink>
-            </FooterCol>
-            <FooterCol>
-              <FooterColTitle>Действия</FooterColTitle>
-              <FooterLink href="/ask">Спросить AI-агента</FooterLink>
-              <FooterLink href="/concepts">Читать концепты</FooterLink>
+              <FooterLink href="/about">{t('sections.about')}</FooterLink>
+              <FooterLink href="/support">{t('sections.support')}</FooterLink>
             </FooterCol>
           </FooterCols>
         </FooterInner>
@@ -50,7 +46,7 @@ export function Footer() {
           <span>© {new Date().getFullYear()} Conceptica</span>
           <span>
             <FooterCredit
-              href="https://haih.ai"
+              href="https://github.com/haih-net/agent"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -58,7 +54,7 @@ export function Footer() {
             </FooterCredit>
             {' · '}
             <FooterCredit
-              href="https://x.com"
+              href="https://fi1osof.ru"
               target="_blank"
               rel="noopener noreferrer"
             >

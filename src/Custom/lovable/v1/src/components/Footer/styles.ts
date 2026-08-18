@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { theme, media } from '@/theme'
+import Link from 'next/link'
 
 export const FooterWrap = styled.footer`
   border-top: 1px solid ${theme.lovable.color.border};
@@ -24,7 +25,7 @@ export const FooterBrand = styled.div`
   max-width: 340px;
 `
 
-export const FooterLogo = styled.a`
+export const FooterLogo = styled(Link)`
   font-family: ${theme.lovable.font.serif};
   font-weight: ${theme.lovable.fontWeight.semibold};
   font-size: 1.3rem;
@@ -65,7 +66,7 @@ export const FooterColTitle = styled.span`
   color: ${theme.lovable.color.faint};
 `
 
-export const FooterLink = styled.a`
+export const FooterLink = styled(Link)`
   font-family: ${theme.lovable.font.sans};
   font-size: ${theme.lovable.fontSize.small};
   color: ${theme.lovable.color.inkSoft};
@@ -89,7 +90,7 @@ export const FooterBottom = styled.div`
   color: ${theme.lovable.color.muted};
 `
 
-export const FooterCredit = styled.a`
+export const FooterCredit = styled(Link)`
   color: ${theme.lovable.color.muted};
   text-decoration: none;
   border-bottom: 1px dotted ${theme.lovable.color.borderStrong};

@@ -1,73 +1,22 @@
-import { useOpenChatWithMessage } from 'src/components/Chat/hooks/useOpenChatWithMessage'
-import { Markdown } from 'src/components/Markdown'
+import { LovableSuggestResearchPage } from '@/pages/SuggestResearch'
 import { Page } from 'src/components/pages/_App/interfaces'
 import { SeoHeaders } from 'src/components/seo/SeoHeaders'
-import { Button } from 'src/ui-kit/Button'
-
-const content = `# Предложить исследование
-
-Есть вопрос, который давно не даёт вам покоя?  
-Что-то, что вы хотите понять, но пока не нашли хорошего объяснения?
-
-Расскажите об этом нашему AI-агенту.
-
-Не нужно искать правильные термины, выбирать категорию или пытаться красиво сформулировать тему. Просто объясните своими словами:
-
-- что вас интересует;
-- что вы уже знаете или думаете об этом;
-- что именно вам непонятно;
-- почему этот вопрос для вас важен.
-
-Агент поможет уточнить мысль, если это понадобится.
-
-Ваш вопрос может стать темой одного из следующих исследований Conceptica.
-
-## Что происходит дальше
-
-Мы читаем предложенные вопросы и выбираем среди них темы для будущих исследований.
-
-Если вы хотите, чтобы мы могли задать дополнительные вопросы или сообщить вам о результате, оставьте агенту удобный способ связи.
-
-## Не знаете, как сформулировать?
-
-Так и напишите:
-
-> Я не знаю, как это правильно называется, но меня давно интересует вот что...
-
-Этого достаточно.
-`
+import { useLexicon } from 'src/Custom/Lexicon'
+import { suggestResearchLexicon } from './lexicon'
 
 export const SuggestResearchPage: Page = ({ siteOrigin }) => {
-  const openAi = useOpenChatWithMessage()
+  const { t } = useLexicon(suggestResearchLexicon)
 
   return (
     <>
       <SeoHeaders
-        title="Предложить исследование"
-        description={
-          'Предложите вопрос для исследования Conceptica. Не нужно знать правильные термины — просто расскажите своими словами, что вас интересует и что вы хотите понять'
-        }
+        title={t('seo.title')}
+        description={t('seo.description')}
         canonical={'/suggest-research'}
         siteOrigin={siteOrigin}
       />
-      <Markdown>{content}</Markdown>
 
-      <div>
-        <Button
-          onClick={openAi}
-          value={`Я хочу предложить вопрос для возможного исследования Conceptica.
-
-Меня интересует:
-[Расскажите своими словами]
-
-Если нужно, задайте мне уточняющие вопросы.
-
-Для обратной связи:
-Email или Telegram: [укажите контакт]`}
-        >
-          Предложить вопрос AI-агенту
-        </Button>
-      </div>
+      <LovableSuggestResearchPage />
     </>
   )
 }

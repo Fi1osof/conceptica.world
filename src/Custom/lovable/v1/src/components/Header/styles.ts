@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { theme, media } from '@/theme'
+import Link from 'next/link'
 
 export const HeaderWrap = styled.header`
   position: sticky;
@@ -18,7 +19,7 @@ export const HeaderBar = styled.div`
   height: ${theme.lovable.layout.headerHeight};
 `
 
-export const Logo = styled.a`
+export const Logo = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
@@ -49,7 +50,7 @@ export const Nav = styled.nav`
   }
 `
 
-export const NavLink = styled.a`
+export const NavLink = styled(Link)`
   font-family: ${theme.lovable.font.sans};
   font-size: ${theme.lovable.fontSize.small};
   color: ${theme.lovable.color.inkSoft};
@@ -143,12 +144,11 @@ export const MobilePanel = styled.div<{ $open?: boolean }>`
 export const MobileNav = styled.nav`
   display: flex;
   flex-direction: column;
-  padding: ${theme.lovable.spacing.sm} ${theme.lovable.spacing.md}
-    ${theme.lovable.spacing.md};
+  padding: ${`${theme.lovable.spacing.sm} ${theme.lovable.spacing.md} ${theme.lovable.spacing.md}`};
   gap: 0.25rem;
 `
 
-export const MobileNavLink = styled.a`
+export const MobileNavLink = styled(Link)`
   font-family: ${theme.lovable.font.sans};
   font-size: ${theme.lovable.fontSize.body};
   color: ${theme.lovable.color.ink};

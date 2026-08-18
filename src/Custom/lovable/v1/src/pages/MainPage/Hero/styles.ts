@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { theme, media } from '@/theme'
+import Link from 'next/link'
 
 export const HeroSection = styled.section`
   padding-block: ${theme.lovable.spacing.xxl} ${theme.lovable.spacing.section};
@@ -94,7 +95,7 @@ export const HeroActions = styled.div`
   margin-top: ${theme.lovable.spacing.sm};
 `
 
-export const HeroHint = styled.a`
+export const HeroHint = styled(Link)`
   margin-top: ${theme.lovable.spacing.md};
   font-family: ${theme.lovable.font.sans};
   font-size: ${theme.lovable.fontSize.small};

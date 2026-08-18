@@ -1,12 +1,12 @@
-import { ButtonLink, type ButtonLinkProps } from '@/components/Button'
+import { Button, type ButtonLinkProps } from '@/components/Button'
+import { useOpenChatWithMessage } from 'src/components/Chat/hooks/useOpenChatWithMessage'
 
-/**
- * Stub entry-point for the AI agent. Navigates to /ask placeholder page.
- */
 export function AskAgentButton(props: Omit<ButtonLinkProps, 'href'>) {
+  const onClick = useOpenChatWithMessage()
+
   return (
-    <ButtonLink href="/ask" variant="primary" {...props}>
+    <Button variant="primary" onClick={onClick} {...props}>
       {props.children ?? 'Спросить AI-агента ✦'}
-    </ButtonLink>
+    </Button>
   )
 }

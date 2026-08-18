@@ -9,18 +9,19 @@ import {
   ListMore,
 } from './styles'
 import { Concept } from '@/pages/Concepts/interfaces'
+import { useLexicon } from 'src/Custom/Lexicon'
+import { conceptListLexicon } from './lexicon'
 
 export function ConceptList({ concepts }: { concepts: Concept[] }) {
+  const { t } = useLexicon(conceptListLexicon)
+
   return (
     <ListSection id="concepts">
       <Container>
         <ListHeader>
           <div>
-            <ListTitle>Концепты</ListTitle>
-            <ListSubtitle>
-              Каждый концепт — одна мысль, доведённая до понимания. Без
-              обязательного порядка: можно начать с любой.
-            </ListSubtitle>
+            <ListTitle>{t('conceptList.title')}</ListTitle>
+            <ListSubtitle>{t('conceptList.subtitle')}</ListSubtitle>
           </div>
         </ListHeader>
 
@@ -30,7 +31,7 @@ export function ConceptList({ concepts }: { concepts: Concept[] }) {
           ))}
         </ListGrid>
 
-        <ListMore href="/concepts">Все концепты →</ListMore>
+        <ListMore href="/concepts">{t('conceptList.allConcepts')}</ListMore>
       </Container>
     </ListSection>
   )

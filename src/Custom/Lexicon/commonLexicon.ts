@@ -11,6 +11,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'Онлайн',
+    read: 'Читать',
   },
   en: {
     'error.http': 'HTTP Error: {{status}}',
@@ -22,6 +23,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'Online',
+    read: 'Read',
   },
   vi: {
     'error.http': 'Lỗi HTTP: {{status}}',
@@ -32,6 +34,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'Trực tuyến',
+    read: 'Đọc',
   },
   es: {
     'error.http': 'Error HTTP: {{status}}',
@@ -43,6 +46,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'En línea',
+    read: 'Leer',
   },
   zh: {
     'error.http': 'HTTP 错误：{{status}}',
@@ -53,6 +57,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': '在线',
+    read: '阅读',
   },
   pt: {
     'error.http': 'Erro HTTP: {{status}}',
@@ -63,6 +68,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'Online',
+    read: 'Ler',
   },
   hi: {
     'error.http': 'HTTP त्रुटि: {{status}}',
@@ -74,6 +80,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'ऑनलाइन',
+    read: 'पढ़ना',
   },
   fr: {
     'error.http': 'Erreur HTTP : {{status}}',
@@ -85,6 +92,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'En ligne',
+    read: 'Lire',
   },
   bn: {
     'error.http': 'HTTP ত্রুটি: {{status}}',
@@ -95,6 +103,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'অনলাইন',
+    read: 'পড়া',
   },
   de: {
     'error.http': 'HTTP-Fehler: {{status}}',
@@ -106,6 +115,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'Online',
+    read: 'Lesen',
   },
   ja: {
     'error.http': 'HTTPエラー: {{status}}',
@@ -117,6 +127,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'オンライン',
+    read: '読む',
   },
   tr: {
     'error.http': 'HTTP Hatası: {{status}}',
@@ -128,6 +139,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'Çevrimiçi',
+    read: 'Okumak',
   },
   ko: {
     'error.http': 'HTTP 오류: {{status}}',
@@ -139,6 +151,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': '온라인',
+    read: '읽기',
   },
   th: {
     'error.http': 'ข้อผิดพลาด HTTP: {{status}}',
@@ -149,6 +162,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'ออนไลน์',
+    read: 'อ่าน',
   },
   sw: {
     'error.http': 'Hitilafu la HTTP: {{status}}',
@@ -160,6 +174,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'Mtandaoni',
+    read: 'Kusoma',
   },
   it: {
     'error.http': 'Errore HTTP: {{status}}',
@@ -171,6 +186,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'Online',
+    read: 'Leggere',
   },
   pl: {
     'error.http': 'Błąd HTTP: {{status}}',
@@ -182,6 +198,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'Online',
+    read: 'Czytać',
   },
   fil: {
     'error.http': 'Error sa HTTP: {{status}}',
@@ -193,6 +210,7 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'Online',
+    read: 'Magbasa',
   },
   ms: {
     'error.http': 'Ralat HTTP: {{status}}',
@@ -203,5 +221,6 @@ export const commonLexicon: LexiconDict = {
     'chat.title': 'Conceptica AI',
     'chat.subtitle': '',
     'chat.status': 'Dalam talian',
+    read: 'Membaca',
   },
 }

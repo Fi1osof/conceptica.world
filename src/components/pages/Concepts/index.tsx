@@ -9,15 +9,22 @@ import {
 import { useAppContext } from 'src/components/AppContext'
 import { ConceptsPageProps } from './interfaces'
 import { getConceptsConnectionQueryVariables } from './helpers'
-import { ConceptsView } from './View'
+// import { ConceptsView } from './View'
 import Link from 'next/link'
 import { getCurrentUser } from 'src/helpers/getCurrentUser'
+import { useLexicon } from 'src/Custom/Lexicon'
+import { conceptsLexicon } from './lexicon'
+import { LovableConceptsPage } from '@/pages/Concepts'
+import { conceptToLovable } from 'src/Custom/helpers/conceptToLovable'
+import { useMemo } from 'react'
+import { Concept } from '@/pages/Concepts/interfaces'
 
 export const ConceptsPage: Page<ConceptsPageProps> = ({
   page = 1,
   siteOrigin,
 }) => {
   const { user: currentUser } = useAppContext()
+  const { t } = useLexicon(conceptsLexicon)
 
   const variables = getConceptsConnectionQueryVariables({
     page: page,
@@ -28,10 +35,15 @@ export const ConceptsPage: Page<ConceptsPageProps> = ({
     variables,
   })
 
+  const concepts = useMemo(() => {
+    return response.data?.concepts?.map<Concept>(conceptToLovable) ?? []
+  }, [response.data?.concepts])
+
   return (
     <>
       <SeoHeaders
-        title="Concepts"
+        title={t('seo.title')}
+        description={t('seo.description')}
         canonical={`/concepts${page > 1 ? `?page=${page}` : ''}`}
         siteOrigin={siteOrigin}
       />
@@ -44,11 +56,11 @@ export const ConceptsPage: Page<ConceptsPageProps> = ({
         </div>
       )}
 
-      <ConceptsView
-        concepts={response.data?.concepts ?? []}
-        count={response.data?.kBConceptsCount ?? 0}
-        page={page}
-        limit={variables.take}
+      <LovableConceptsPage
+        concepts={concepts}
+        // count={response.data?.kBConceptsCount ?? 0}
+        // page={page}
+        // limit={variables.take}
       />
     </>
   )

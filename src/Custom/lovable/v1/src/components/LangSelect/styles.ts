@@ -82,6 +82,9 @@ export const MenuItem = styled.li`
   display: block;
 `
 
+/**
+ * Здесь надо именно нативный тег, а не Link. Иначе задвоение будет локалей
+ */
 export const MenuLink = styled.a<{ $active?: boolean }>`
   display: flex;
   align-items: center;

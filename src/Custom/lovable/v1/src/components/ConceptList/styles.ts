@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { theme, media } from '@/theme'
+import Link from 'next/link'
 
 export const ListSection = styled.section`
   padding-block: ${theme.lovable.spacing.section};
@@ -50,7 +51,7 @@ export const ListGrid = styled.div`
   }
 `
 
-export const ListMore = styled.a`
+export const ListMore = styled(Link)`
   margin-top: ${theme.lovable.spacing.lg};
   font-family: ${theme.lovable.font.sans};
   font-size: ${theme.lovable.fontSize.body};

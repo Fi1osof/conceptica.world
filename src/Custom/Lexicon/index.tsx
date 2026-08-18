@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useMemo } from 'react'
-import i18n, { TFunction } from 'i18next'
+import i18n, { Resource, ResourceLanguage, TFunction } from 'i18next'
 import { I18nextProvider, useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 import {
@@ -10,14 +10,10 @@ import {
 } from '../components/LocaleSwitcher/interfaces'
 import { commonLexicon } from './commonLexicon'
 
-export type LexiconValue = string | LexiconObject
-
-export type LexiconObject = {
-  [key: string]: LexiconValue
-}
+export type LexiconObject = ResourceLanguage
 
 export type LexiconDict = {
-  [key in Locale]: LexiconObject
+  [key in Locale]: ResourceLanguage
 }
 
 export type LexiconTranslate = TFunction
@@ -32,13 +28,10 @@ const LexiconContext = createContext<LexiconContextValue>({
 
 const i18nInstance = i18n.createInstance()
 
-const emptyResources = LOCALE_CODES.reduce(
-  (acc, code) => {
-    acc[code] = { common: {} }
-    return acc
-  },
-  {} as Record<string, { common: LexiconObject }>,
-)
+const emptyResources = LOCALE_CODES.reduce((acc, code) => {
+  acc[code] = { common: {} }
+  return acc
+}, {} as Resource)
 
 i18nInstance.init({
   lng: DEFAULT_LOCALE,
@@ -106,7 +99,7 @@ export function useLexicon<T extends LexiconDict>(localLexicon?: T) {
     }
   }, [localLexicon])
 
-  return t
+  return { t }
 }
 
 export function useLocale(): Locale {

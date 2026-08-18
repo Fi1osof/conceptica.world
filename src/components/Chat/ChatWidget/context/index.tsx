@@ -154,7 +154,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({
   welcomeText,
   placeholder,
 }) => {
-  const t = useLexicon(chatLexicon)
+  const { t } = useLexicon(chatLexicon)
   const snackbar = useSnackbar()
   const [isOpen, setIsOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)

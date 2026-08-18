@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react'
 import { Container } from '@/components/Container'
+import { useLexicon } from 'src/Custom/Lexicon'
+import { supportPageLexicon } from './lexicon'
 import {
   Wrap,
   Hero,
@@ -20,16 +21,6 @@ import {
   FormCard,
   FormTitle,
   FormHint,
-  Field,
-  Label,
-  PresetRow,
-  PresetButton,
-  AmountRow,
-  Input,
-  Select,
-  SubmitButton,
-  FormNote,
-  CoinRow,
   Blockquote,
   CtaBand,
   CtaGrid,
@@ -38,123 +29,45 @@ import {
   CtaText,
   CtaLink,
 } from './styles'
-
-/** NOWPayments donation link (public checkout, no keys on the client). */
-// const NOWPAYMENTS_DONATION_URL = 'https://nowpayments.io/donation/conceptica'
-
-const PRESETS = [10, 25, 50, 100]
-const CURRENCIES = ['USD', 'EUR']
-const COINS = [
-  'BTC',
-  'ETH',
-  'USDT',
-  'USDC',
-  'TON',
-  'SOL',
-  'TRX',
-  'XMR',
-  '+ 200 more',
-]
+import { Trans } from 'react-i18next'
 
 export function LovableSupportPage() {
-  const [amount, setAmount] = useState('25')
-  const [currency, setCurrency] = useState('USD')
+  const { t } = useLexicon(supportPageLexicon)
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const { name, value } = e.target
-
-      switch (name) {
-        case 'amount':
-          setAmount(value)
-          break
-        case 'currency':
-          setCurrency(value)
-          break
-      }
-    },
-    [],
-  )
-
-  // const donateUrl = () => {
-  //   const params = new URLSearchParams()
-  //   const value = Number(amount)
-  //   if (Number.isFinite(value) && value > 0) {
-  //     params.set('amount', String(value))
-  //     params.set('currency', currency.toLowerCase())
-  //   }
-  //   const query = params.toString()
-  //   return query ? `${NOWPAYMENTS_DONATION_URL}?${query}` : NOWPAYMENTS_DONATION_URL
-  // }
-
+  const spendItems = t('spend.items', {
+    returnObjects: true,
+  }) as
+    | {
+        text: string
+        title: string
+      }[]
+    | undefined
   return (
     <Wrap>
       <Hero>
         <Container>
-          <Eyebrow>Поддержать</Eyebrow>
-          <HeroTitle>Поддержать Conceptica</HeroTitle>
-          <HeroLead>
-            Conceptica — открытый проект. Основные материалы доступны всем
-            независимо от страны, уровня образования или возможности заплатить.
-          </HeroLead>
-          <HeroLead>
-            Если вы считаете эту работу полезной и хотите, чтобы проект
-            продолжал развиваться, вы можете поддержать его.
-          </HeroLead>
+          <Eyebrow>{t('hero.eyebrow')}</Eyebrow>
+          <HeroTitle>{t('hero.title')}</HeroTitle>
+          <HeroLead>{t('hero.lead1')}</HeroLead>
+          <HeroLead>{t('hero.lead2')}</HeroLead>
         </Container>
       </Hero>
 
       <Section>
         <Container>
           <SectionHead>
-            <Eyebrow>На что идёт поддержка</Eyebrow>
-            <SectionTitle>
-              Создание Conceptica требует не только идей
-            </SectionTitle>
-            <Paragraph>
-              Ваша поддержка даёт мне возможность уделять проекту больше времени
-              и продолжать делать его лучше.
-            </Paragraph>
+            <Eyebrow>{t('spend.eyebrow')}</Eyebrow>
+            <SectionTitle>{t('spend.title')}</SectionTitle>
+            <Paragraph>{t('spend.p1')}</Paragraph>
           </SectionHead>
 
           <SpendGrid>
-            <SpendItem>
-              <SpendTitle>Исследования</SpendTitle>
-              <SpendText>
-                Время на изучение темы, проверку источников и написание
-                материалов.
-              </SpendText>
-            </SpendItem>
-            <SpendItem>
-              <SpendTitle>Сайт</SpendTitle>
-              <SpendText>
-                Разработка и поддержка платформы, на которой всё это живёт.
-              </SpendText>
-            </SpendItem>
-            <SpendItem>
-              <SpendTitle>Инфраструктура</SpendTitle>
-              <SpendText>
-                Серверы, хранилище и сервисы, которые держат проект онлайн.
-              </SpendText>
-            </SpendItem>
-            <SpendItem>
-              <SpendTitle>AI-инструменты</SpendTitle>
-              <SpendText>
-                Модели и агенты, помогающие превращать вопросы в объяснения.
-              </SpendText>
-            </SpendItem>
-            <SpendItem>
-              <SpendTitle>Переводы</SpendTitle>
-              <SpendText>
-                Материалы становятся доступны на большем числе языков.
-              </SpendText>
-            </SpendItem>
-            <SpendItem>
-              <SpendTitle>Эксперименты</SpendTitle>
-              <SpendText>
-                Новые форматы подачи и идеи, которые ещё предстоит проверить.
-              </SpendText>
-            </SpendItem>
+            {spendItems?.map((item) => (
+              <SpendItem key={item.title}>
+                <SpendTitle>{item.title}</SpendTitle>
+                <SpendText>{item.text}</SpendText>
+              </SpendItem>
+            ))}
           </SpendGrid>
         </Container>
       </Section>
@@ -164,88 +77,38 @@ export function LovableSupportPage() {
           <MainGrid>
             <div>
               <SectionHead>
-                <Eyebrow>Сколько отправить</Eyebrow>
-                <SectionTitle>
-                  Столько, сколько вы сами считаете разумным
-                </SectionTitle>
+                <Eyebrow>{t('amount.eyebrow')}</Eyebrow>
+                <SectionTitle>{t('amount.title')}</SectionTitle>
               </SectionHead>
               <Callout>
-                Если даже небольшой донат является для вас существенным расходом
-                — <Strong>ничего не отправляйте</Strong>. Читайте материалы,
-                задавайте вопросы, делитесь интересными идеями и используйте
-                Conceptica для решения своих задач. Этого достаточно.
+                <Trans
+                  i18nKey="amount.callout"
+                  components={{
+                    strong: <Strong />,
+                  }}
+                />
               </Callout>
-              <Paragraph>
-                Если же сумма для вас несущественна, а проект кажется полезным,
-                любая поддержка поможет его развитию.
-              </Paragraph>
-              <CoinRow>
-                {COINS.map((coin) => (
-                  <li key={coin}>{coin}</li>
-                ))}
-              </CoinRow>
+              <Paragraph>{t('amount.p1')}</Paragraph>
             </div>
 
             <FormCard>
-              <FormTitle>Поддержать проект</FormTitle>
-              <FormHint>
-                Оплата проходит через NOWPayments — криптоплатёжный сервис.
-                Выберите сумму, дальше можно будет выбрать удобную монету.
-              </FormHint>
+              <FormTitle>{t('amount.formTitle')}</FormTitle>
+              <FormHint>{t('amount.formHint')}</FormHint>
 
-              <form>
-                <Field>
-                  <Label>Быстрый выбор</Label>
-                  <PresetRow>
-                    {PRESETS.map((preset) => (
-                      <PresetButton
-                        key={preset}
-                        type="button"
-                        data-active={amount === String(preset)}
-                      >
-                        {preset} {currency === 'USD' ? '$' : '€'}
-                      </PresetButton>
-                    ))}
-                  </PresetRow>
-                </Field>
-
-                <Field>
-                  <Label htmlFor="amount">Сумма</Label>
-                  <AmountRow>
-                    <Input
-                      id="amount"
-                      name="amount"
-                      type="number"
-                      min="1"
-                      step="1"
-                      inputMode="decimal"
-                      value={amount}
-                      onChange={handleChange}
-                      placeholder="Например, 25"
-                    />
-                    <Select
-                      name="currency"
-                      aria-label="Валюта"
-                      value={currency}
-                      onChange={handleChange}
-                    >
-                      {CURRENCIES.map((code) => (
-                        <option key={code} value={code}>
-                          {code}
-                        </option>
-                      ))}
-                    </Select>
-                  </AmountRow>
-                </Field>
-
-                <SubmitButton type="submit" disabled={!(Number(amount) > 0)}>
-                  Перейти к оплате →
-                </SubmitButton>
-                <FormNote>
-                  Вы перейдёте на защищённую страницу NOWPayments. Мы не
-                  получаем и не храним данные вашего кошелька.
-                </FormNote>
-              </form>
+              <iframe
+                src="https://nowpayments.io/embeds/donation-widget?api_key=0a65db4b-1156-446a-bccc-c9527a42be3e"
+                width="346"
+                height="623"
+                // eslint-disable-next-line @typescript-eslint/no-deprecated
+                frameBorder="0"
+                // eslint-disable-next-line @typescript-eslint/no-deprecated
+                scrolling="no"
+                style={{
+                  overflow: 'hidden',
+                }}
+              >
+                Can not load widget
+              </iframe>
             </FormCard>
           </MainGrid>
         </Container>
@@ -254,21 +117,12 @@ export function LovableSupportPage() {
       <Section>
         <Container variant="narrow">
           <SectionHead>
-            <Eyebrow>Спасибо</Eyebrow>
-            <SectionTitle>Возможность продолжать эту работу</SectionTitle>
+            <Eyebrow>{t('thanks.eyebrow')}</Eyebrow>
+            <SectionTitle>{t('thanks.title')}</SectionTitle>
           </SectionHead>
-          <Paragraph>
-            Я не могу обещать, во что именно превратится Conceptica через
-            несколько лет. Это исследовательский и развивающийся проект, и
-            многие идеи ещё предстоит проверить.
-          </Paragraph>
-          <Blockquote>
-            Но ваша поддержка даёт ему самое ценное — возможность продолжать эту
-            работу.
-          </Blockquote>
-          <Paragraph>
-            Спасибо всем, кто помогает Conceptica развиваться.
-          </Paragraph>
+          <Paragraph>{t('thanks.p1')}</Paragraph>
+          <Blockquote>{t('thanks.blockquote')}</Blockquote>
+          <Paragraph>{t('thanks.p2')}</Paragraph>
         </Container>
       </Section>
 
@@ -276,21 +130,15 @@ export function LovableSupportPage() {
         <Container>
           <CtaGrid>
             <CtaCard>
-              <CtaTitle>Читайте концепты</CtaTitle>
-              <CtaText>
-                Материалы открыты для всех — поддержка не обязательна, чтобы ими
-                пользоваться.
-              </CtaText>
-              <CtaLink href="/concepts">Открыть концепты →</CtaLink>
+              <CtaTitle>{t('cta.card1.title')}</CtaTitle>
+              <CtaText>{t('cta.card1.text')}</CtaText>
+              <CtaLink href="/concepts">{t('cta.card1.link')}</CtaLink>
             </CtaCard>
             <CtaCard>
-              <CtaTitle>Предложить исследование</CtaTitle>
-              <CtaText>
-                Расскажите свой вопрос своими словами — он может стать темой
-                следующего материала.
-              </CtaText>
+              <CtaTitle>{t('cta.card2.title')}</CtaTitle>
+              <CtaText>{t('cta.card2.text')}</CtaText>
               <CtaLink href="/suggest-research" data-variant="ghost">
-                Предложить тему →
+                {t('cta.card2.link')}
               </CtaLink>
             </CtaCard>
           </CtaGrid>

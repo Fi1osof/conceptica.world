@@ -1,8 +1,10 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Container } from '@/components/Container'
-import { ButtonLink } from '@/components/Button'
+import { Button } from '@/components/Button'
 import { LangSelect } from '../LangSelect'
 import { LogoMark } from '../Logo'
+import { useLexicon } from 'src/Custom/Lexicon'
+import { headerLexicon } from './lexicon'
 import {
   HeaderWrap,
   HeaderBar,
@@ -16,21 +18,35 @@ import {
   MobileNavLink,
   MobileActions,
 } from './styles'
+import { useOpenChatWithMessage } from 'src/components/Chat/hooks/useOpenChatWithMessage'
 
-const navItems = [
-  { label: 'Концепты', href: '/concepts' },
-  { label: 'Предложить исследование', href: '/suggest-research' },
-  { label: 'О проекте', href: '/about' },
-  { label: 'Поддержать', href: '/support' },
-]
+type NavItem = {
+  label: string
+  href: string
+}
 
 export function Header() {
   const [open, setOpen] = useState(false)
+
+  const { t } = useLexicon(headerLexicon)
+
+  const navItems = useMemo(() => {
+    const navItems: NavItem[] = [
+      { label: t('nav.concepts'), href: '/concepts' },
+      { label: t('nav.suggestResearch'), href: '/suggest-research' },
+      { label: t('nav.about'), href: '/about' },
+      { label: t('nav.support'), href: '/support' },
+    ]
+
+    return navItems
+  }, [t])
 
   const closeMenu = useCallback((event: React.MouseEvent) => {
     event.stopPropagation()
     setOpen(false)
   }, [])
+
+  const onClick = useOpenChatWithMessage()
 
   return (
     <HeaderWrap>
@@ -54,9 +70,9 @@ export function Header() {
           <HeaderActions>
             <LangSelect />
 
-            <ButtonLink href="/ask" variant="primary" className="ask-top">
-              Спросить AI ✦
-            </ButtonLink>
+            <Button variant="primary" className="ask-top" onClick={onClick}>
+              {t('actions.askAi')}
+            </Button>
 
             {/* Hidden checkbox powers the no-JS fallback; the React handler
                 intercepts when JS is alive so state stays the source of truth. */}
@@ -80,7 +96,7 @@ export function Header() {
               htmlFor="menu-toggle"
               role="button"
               tabIndex={0}
-              aria-label="Меню"
+              aria-label={t('actions.menu')}
               aria-expanded={open}
               onClick={useCallback((e: React.SyntheticEvent) => {
                 e.stopPropagation()
@@ -113,9 +129,9 @@ export function Header() {
             ))}
           </MobileNav>
           <MobileActions>
-            <ButtonLink href="/ask" variant="primary" className="full">
-              Спросить AI ✦
-            </ButtonLink>
+            <Button onClick={onClick} variant="primary" className="full">
+              {t('actions.askAi')}
+            </Button>
           </MobileActions>
         </Container>
       </MobilePanel>

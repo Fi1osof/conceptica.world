@@ -28,7 +28,7 @@ export const ChatModal: React.FC<ChatModalProps> = ({
   onClose,
   onExpand,
 }) => {
-  const t = useLexicon()
+  const { t } = useLexicon()
   const stopPropagation = useCallback((e: React.SyntheticEvent) => {
     e.stopPropagation()
   }, [])
