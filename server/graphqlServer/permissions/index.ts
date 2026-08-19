@@ -63,7 +63,7 @@ const ruleTree = {
     createMindLog: isActive,
     singleUpload: isActive,
     createReferrerToken: isActive,
-    createConcept: isActive,
+    createConcept: isSudo,
     createConflict: isActive,
     createConstraint: isActive,
     createDecision: isActive,
