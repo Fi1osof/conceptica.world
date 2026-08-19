@@ -20,6 +20,9 @@ export default class MyDocument extends Document {
             rel="stylesheet"
           />
 
+          {/* Favicon */}
+          <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+
           {/* 
             next/head умеет читать только прямъ потомков. Вглубь ингорирует. 
             Поэтому приходится каждый блок оборачивать отдельно

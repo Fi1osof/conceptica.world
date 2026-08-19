@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  width="48"
+  height="48"
+  viewBox="0 0 48 48"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label="Conceptica"
+>
+  <defs>
+    <mask
+      id="conceptica-eclipse"
+      maskUnits="userSpaceOnUse"
+      maskContentUnits="userSpaceOnUse"
+      x="0"
+      y="0"
+      width="48"
+      height="48"
+    >
+      <rect width="48" height="48" fill="black" />
+      <circle cx="24" cy="24" r="18" fill="white" />
+      <circle cx="33" cy="24" r="14" fill="black" />
+    </mask>
+  </defs>
+
+  <circle
+    cx="24"
+    cy="24"
+    r="21.25"
+    stroke="#3457A1"
+    stroke-opacity="0.22"
+    stroke-width="1.5"
+  />
+
+  <circle
+    cx="24"
+    cy="24"
+    r="18"
+    fill="#3457A1"
+    mask="url(#conceptica-eclipse)"
+  />
+
+  <circle
+    cx="34.5"
+    cy="24"
+    r="3"
+    fill="#3457A1"
+  />
+</svg>
