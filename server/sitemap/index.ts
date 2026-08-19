@@ -1,4 +1,9 @@
-import { UserStatus } from '@prisma/client'
+import {
+  KBConcept,
+  KBConceptVisibility,
+  Prisma,
+  UserStatus,
+} from '@prisma/client'
 import { Request, Response } from 'express'
 import { prismaClient } from 'server/prisma'
 import { buildPostWhere } from 'server/schema/types/Post/helpers/buildPostWhere'
@@ -71,36 +76,20 @@ export enum SitemapSection {
 }
 
 async function getKbConcepts(): Promise<UrlItem[]> {
-  return prismaClient.kBConcept
-    .findMany({
-      where: {
-        visibility: {
-          not: 'unpublished',
-        },
-      },
-      orderBy: {
-        updatedAt: 'desc',
-      },
-    })
-    .then((r) => {
-      return r
-        .map<UrlItem | undefined>((n) => {
-          const { uri, visibility } = n
+  const concepts = await prismaClient.$queryRaw<
+    Pick<KBConcept, 'id' | 'uri' | 'updatedAt'>[]
+  >`
+    SELECT id, uri, "updatedAt" FROM "KBConcept" 
+    WHERE visibility != ${Prisma.raw(`'${KBConceptVisibility.unpublished}'`)} AND "en" IS NOT NULL AND uri IS NOT NULL
+    ORDER BY "updatedAt" DESC
+  `
 
-          if (!uri || visibility === 'unpublished') {
-            return
-          }
-
-          return {
-            updatedAt: new Date(n.updatedAt).toISOString(),
-            url: createConceptLink({
-              ...n,
-              uri,
-            }),
-          }
-        })
-        .filter((n) => !!n)
-    })
+  return concepts
+    .filter((n) => !!n.uri)
+    .map((n) => ({
+      updatedAt: new Date(n.updatedAt).toISOString(),
+      url: createConceptLink(n),
+    }))
 }
 
 type UrlItem = {
