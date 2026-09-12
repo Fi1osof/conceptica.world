@@ -11,9 +11,25 @@ import {
   LayoutMainHeader,
 } from './styles'
 import { SidebarMemo } from './Sidebar'
-import { ChatContent } from 'src/components/Chat/ChatWidget/ChatContent'
-import { ChatWidget } from '../Chat/ChatWidget'
+import dynamic from 'next/dynamic'
 import { LocaleSwitcher } from 'src/Custom/components/LocaleSwitcher'
+
+const ChatContent = dynamic(
+  () =>
+    import('src/components/Chat/ChatWidget/ChatContent').then(
+      (r) => r.ChatContent,
+    ),
+  {
+    ssr: false,
+  },
+)
+
+const ChatWidget = dynamic(
+  () => import('../Chat/ChatWidget').then((r) => r.ChatWidget),
+  {
+    ssr: false,
+  },
+)
 
 type LayoutProps = React.PropsWithChildren
 

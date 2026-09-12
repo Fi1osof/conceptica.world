@@ -53,7 +53,7 @@ export const ConceptItem: React.FC<ConceptItemProps> = ({
   }
 
   return (
-    <ConceptItemStyled {...other} $variant={variant}>
+    <ConceptItemStyled {...other} variant={variant}>
       {titleBlock}
 
       {image && (

@@ -1,8 +1,11 @@
 import { Prisma } from '@prisma/client'
-import slugify from '@sindresorhus/slugify'
-import { builder } from '../../../builder'
+import { builder } from 'server/schema/builder'
 import { KBConceptCreateInput } from '../inputs'
 import { createCUID } from '../../helpers/createCUID'
+import { slugifyUri } from '../../helpers/slugifyUri'
+import { buildValidUrisSet } from '../helpers/buildValidUrisSet'
+import { removeInvalidLinks } from '../helpers/validateInternalLinks'
+import { normalizeMarkdownContent } from '../helpers/normalizeMarkdownContent'
 
 builder.mutationField('createConcept', (t) =>
   t.prismaField({
@@ -21,23 +24,14 @@ builder.mutationField('createConcept', (t) =>
           quality,
           data: dataArg,
           visibility,
-          uri: uriArg,
+          uri,
+          content,
           ...other
         },
       } = args
 
       if (!name) {
         throw new Error('name required')
-      }
-
-      let uri = uriArg
-
-      if (!uri) {
-        const urlSection = '/concepts'
-
-        const slug = slugify(name)
-
-        uri = [urlSection, slug].join('/')
       }
 
       const id = createCUID()
@@ -49,12 +43,26 @@ builder.mutationField('createConcept', (t) =>
         quality: quality ?? undefined,
         visibility: visibility ?? undefined,
         data: dataArg as Prisma.KBConceptCreateInput['data'],
-        uri: uri || `/concepts/${id}`,
+        uri: slugifyUri(uri || `/concepts/${name}`),
         CreatedBy: {
           connect: {
             id: ctx.currentUser.id,
           },
         },
+      }
+
+      if (content) {
+        const validUris = await buildValidUrisSet(ctx)
+
+        // 1. Remove invalid internal links
+        let processedContent = (
+          await removeInvalidLinks(content, validUris, true)
+        ).content
+
+        // 2. Normalize markdown: add blank lines after opening tags for proper rendering
+        processedContent = await normalizeMarkdownContent(processedContent)
+
+        data.content = processedContent
       }
 
       return ctx.prisma.kBConcept.create({

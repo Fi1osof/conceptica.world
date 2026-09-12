@@ -49,11 +49,7 @@ async function startServer() {
 
   if (withN8N) {
     // Start n8n as child process in background (non-blocking)
-    initN8n()
-      .then(() => runBootstrap())
-      .catch((err) => {
-        console.error('[n8n] Failed to initialize:', err)
-      })
+    initN8n().then(() => runBootstrap())
   }
 
   const server = express()

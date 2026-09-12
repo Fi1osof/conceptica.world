@@ -9,7 +9,9 @@ export const ConceptItemImgStyled = styled.img`
 
 export const ConceptItemMetaStyled = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
   gap: 4px;
   padding: 8px 0 0;
   font-size: 0.75rem;
@@ -38,7 +40,7 @@ export const ConceptItemTypeStyled = styled.span`
 `
 
 type ConceptItemStyledProps = {
-  $variant: ConceptItemVariant
+  variant: ConceptItemVariant
 }
 
 export const ConceptItemStyled = styled.div<ConceptItemStyledProps>`
@@ -53,11 +55,10 @@ export const ConceptItemStyled = styled.div<ConceptItemStyledProps>`
   transition:
     box-shadow 0.2s,
     transform 0.2s;
-
   min-width: 0;
 
-  ${({ $variant }) => {
-    switch ($variant) {
+  ${({ variant }) => {
+    switch (variant) {
       case 'list':
         return css`
           &:hover {

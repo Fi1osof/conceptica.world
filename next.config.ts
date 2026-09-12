@@ -1,16 +1,12 @@
-import { NextConfig } from 'next'
 import { LOCALE_CODES } from 'src/Custom/components/LocaleSwitcher/interfaces'
+import { NextConfig } from 'next'
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-})
+import withBundleAnalyzer from '@next/bundle-analyzer'
 
-// const { LOCALE_CODES } = require('./shared/locales')
-
-// reactStrictMode: false — in dev mode, React Strict Mode causes double rendering of components,
-// leading to duplicate useEffect calls, API requests, and other side effects.
 const nextConfig: NextConfig = {
+  /**
+   * reactStrictMode: false — in dev mode, React Strict Mode causes double rendering of components, leading to duplicate useEffect calls, API requests, and other side effects.
+   */
   reactStrictMode: false,
   compiler: {
     styledComponents: {
@@ -40,4 +36,6 @@ const nextConfig: NextConfig = {
   },
 }
 
-module.exports = withBundleAnalyzer(nextConfig)
+export default withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})(nextConfig)
