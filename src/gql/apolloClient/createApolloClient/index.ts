@@ -266,6 +266,10 @@ function createApolloClient({
     link: ApolloLink.from([authMiddleware, link]),
     cache: new InMemoryCache({
       /**
+       * Not need on server-side due memory leak
+       */
+      resultCaching: typeof window !== 'undefined',
+      /**
        * Here you can specify logic for individual object fields,
        * for example, merging data when performing lazy loading.
        */
