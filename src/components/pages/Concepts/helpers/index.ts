@@ -22,7 +22,6 @@ export function getConceptsConnectionQueryVariables({
   take: number
 } {
   const variable: ReturnType<typeof getConceptsConnectionQueryVariables> = {
-    ...other,
     where: {
       visibility:
         currentUser?.sudo === true ? undefined : KbConceptVisibility.PUBLIC,
@@ -33,6 +32,7 @@ export function getConceptsConnectionQueryVariables({
     orderBy: {
       updatedAt: SortOrder.DESC,
     },
+    ...other,
   }
 
   return variable
